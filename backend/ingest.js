@@ -1,6 +1,7 @@
 const axios = require("axios");
 const xml2js = require('xml2js');
 const cheerio = require('cheerio');
+const fs = require('fs');
 
 async function fetchSiteMap() {
     try {
@@ -49,6 +50,7 @@ async function main() {
       for (const url of articleUrls) {
         const article = await fetchArticleContent(url);
         if (article) articles.push(article);
+        fs.writeFileSync('articles.json', JSON.stringify(articles, null, 2));
       }
       console.log('Fetched Articles:', articles);
     }
