@@ -1,4 +1,5 @@
 const axios = require('axios');
+const { ChromaClient } = require('chromadb');
 require('dotenv').config();
 const fs = require('fs').promises;
 const JINA_API_KEY = process.env.JINA_API_KEY;
@@ -20,6 +21,26 @@ async function getEmbeddings(texts) {
     console.error('Error getting embeddings:', error?.response?.data || error.message || error);
     return [];
   }
+}
+
+async function storeInChroma(articles, embeddings) {
+  const client = new ChromaClient({ path: 'http://localhost:8000' });
+  
+  const collection = await client.getOrCreateCollection({ 
+    name: 'news_articles'
+  });
+
+  const ids = articles.map((_, i) => `article_${i + 1}`);
+  const metadatas = articles.map(article => ({ title: article.title, url: article.url }));
+  const documents = articles.map(article => article.content);
+
+  await collection.add({
+    ids,
+    embeddings,
+    metadatas,
+    documents
+  });
+  console.log('Stored in Chroma!');
 }
 
 async function main() {
@@ -55,18 +76,11 @@ async function main() {
     idxMap.push(i);
   }
 
-  console.log(`Sending ${texts.length} texts for embedding (skipped ${articles.length - texts.length})`);
-
-  if (texts.length === 0) {
-    console.error('No valid article content found. Exiting.');
-    return;
-  }
+  console.log(`Sending ${texts.length} texts for embedding`);
 
   const embeddings = await getEmbeddings(texts);
-  console.log(`Generated ${embeddings.length} embeddings`);
+  await storeInChroma(articles, embeddings);
 
-  // if you want to map embeddings back to article indices:
-  // embeddings[i] -> articles[idxMap[i]]
 }
 
 main().catch(err => {
