@@ -9,3 +9,11 @@
 - Fetches title, snippet/body, URL, date.
 - Saves to `articles.json` for RAG pipeline.
 - Decision: limited to 5 articles for testing(scale to 50 by updating slice(0, 50)).
+
+### Chroma Setup
+- Requires Python 3.12+.
+- Create virtual environment: `python -m venv venv`
+- Activate: `source venv/bin/activate` (Mac/Linux) or `.\venv\Scripts\activate` (Windows).
+- Install Chroma: `pip install chromadb`.
+- Start server: `chroma run --path ./chroma_data`.
+- Decision: Used virtual environment to isolate dependencies, avoid conflicts.
