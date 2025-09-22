@@ -23,3 +23,11 @@
 - Stores in local Chroma (run server first).
 - Run `node embed.js` to populate.
 - Decisions: Jina for free multimodal support; Chroma for easy local setup.
+
+### RAG Pipeline
+- **/query endpoint**: 
+- Embeds query with Jina (jina-embeddings-v4).
+- Retrieves top-5 articles from Chroma (news_articles collection).
+- Generates response with Gemini (gemini-1.5-flash).
+- Test: POST `{ "query": "your question" }` to `http://localhost:3000/query` via Postman.
+- Decisions: Top-k=5 for relevance; Gemini for fast, free text generation.
