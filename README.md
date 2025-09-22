@@ -17,3 +17,9 @@
 - Install Chroma: `pip install chromadb`.
 - Start server: `chroma run --path ./chroma_data`.
 - Decision: Used virtual environment to isolate dependencies, avoid conflicts.
+
+### Embeddings and Vector DB
+- Uses Jina API (model: jina-embeddings-v4) for embeddings via REST.
+- Stores in local Chroma (run server first).
+- Run `node embed.js` to populate.
+- Decisions: Jina for free multimodal support; Chroma for easy local setup.
